@@ -1,0 +1,723 @@
+<!DOCTYPE html>
+<html lang="en" class="light">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LevOr Solutions - Digital Agency</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#A87519',
+                    },
+                    animation: {
+                        'float': 'float 6s ease-in-out infinite',
+                        'float-reverse': 'float-reverse 5s ease-in-out infinite',
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-20px)' },
+                        },
+                        'float-reverse': {
+                            '0%, 100%': { transform: 'translateY(-10px)' },
+                            '50%': { transform: 'translateY(10px)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+        body {
+            font-family: 'Inter', sans-serif;
+
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        .nav-item::after {
+            content: '';
+            display: block;
+            width: 0;
+            height: 2px;
+            background: #A87519;
+            transition: width 0.3s;
+        }
+
+        .nav-item:hover::after {
+            width: 100%;
+        }
+
+        .service-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+
+        .testimonial-card:hover {
+            transform: scale(1.03);
+        }
+
+        .dark .service-card {
+            background-color: #000000;
+            border-color: #222;
+        }
+
+        .dark .testimonial-card {
+            background-color: #000000;
+            border-color: #222;
+        }
+
+        .mobile-nav {
+            box-shadow: 0 -2px 10px rgba(255, 255, 255, 0.1);
+        }
+
+        .dark .mobile-nav {
+            box-shadow: 0 -2px 10px rgba(255, 255, 255, 0.05);
+            background-color: #111;
+        }
+
+        .toggle-checkbox:checked {
+            right: 0;
+            border-color: #A87519;
+        }
+
+        .toggle-checkbox:checked+.toggle-label {
+            background-color: #A87519;
+        }
+        /* White scrollbar for WebKit browsers */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: #1a1a1a00; /* Dark track for contrast */
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #ffffff; /* White thumb */
+  border-radius: 6px;
+  border: 2px solid #1a1a1a00; /* Optional: border for spacing */
+}
+
+/* Optional: on hover */
+::-webkit-scrollbar-thumb:hover {
+  background-color: #e0e0e0;
+}
+
+    </style>
+    <style>
+        /* Loading animation styles */
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgb(255, 255, 255);
+           
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 0.5s ease-out;
+        }
+        
+        .loading-container {
+            position: relative;
+            width: 150px;
+            height: 150px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .loading-logo {
+            width: 200px;
+            
+            animation: spin 1.5s linear infinite;
+        }
+        
+        .loading-ring {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border: 3px solid transparent;
+            border-top-color: #A87519;
+            border-radius: 50%;
+            animation: spin-ring 2s linear infinite;
+        }
+        
+        .loading-ring:nth-child(2) {
+            border-top-color: #000000;
+            animation-delay: 0.3s;
+        }
+        
+        .loading-ring:nth-child(3) {
+            border-top-color: #A87519;
+            animation-delay: 0.6s;
+            width: 130%;
+            height: 130%;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        @keyframes spin-ring {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .fade-out {
+            opacity: 0;
+            pointer-events: none;
+        }
+    </style>
+    <script>
+    // Loading animation control
+    document.addEventListener('DOMContentLoaded', function () {
+        const loadingOverlay = document.getElementById('loading-overlay');
+
+        setTimeout(() => {
+            loadingOverlay.classList.add('fade-out');
+
+            // Remove element from DOM after transition ends
+            setTimeout(() => {
+                loadingOverlay.remove();
+            }, 600); // match the transition duration in CSS
+        }, 600);
+    });
+</script>
+
+</head>
+
+<body class="bg-white text-gray-800 dark:bg-black dark:text-gray-200">
+    <div id="loading-overlay" class="loading-overlay">
+        <div class="loading-container">
+            <div class="loading-ring"></div>
+            <div class="loading-ring"></div>
+            <div class="loading-ring"></div>
+           <a href="/index.html"> <img src="/assets/images/logo.png" width="200px" alt="Loading" class="loading-logo">
+        </a></div>
+    </div>
+    <!-- Desktop Navigation -->
+    <nav class="hidden md:flex items-center justify-between px-6 py-4 lg:px-16">
+        <div class="flex items-center space-x-2">
+        <a href="index.html">    <img width="200px" src="/assets/images/logo.png" class="text-2xl font-bold">
+    </a>    </div>
+
+        <div class="hidden md:flex space-x-8">
+            <a href="/index.html" class="nav-item font-medium">Home</a>
+            <a href="/about/index.html" class="nav-item font-medium">About</a>
+            <a href="/services/index.html" class="nav-item font-medium">Services</a>
+            <a href="/blog/index.html" class="nav-item font-medium">Blog</a>
+            <a href="/contact/index.html" class="nav-item font-medium">Contact</a>
+        </div>
+
+        <div class="flex items-center space-x-4">
+            <div class="relative inline-block w-12 mr-2 align-middle select-none">
+                <!--    <input type="checkbox" name="toggle" id="toggle" class="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer"/>
+                <label for="toggle" class="toggle-label block overflow-hidden h-6 rounded-full bg-gray-300 cursor-pointer"></label>
+           -->
+            </div>
+            <button
+                class="bg-primary hover:bg-opacity-90 text-black px-6 py-2 rounded-full transition-all duration-300 transform hover:scale-105">
+                Get Started
+            </button>
+        </div>
+    </nav>
+    <!-- Mobile Logo at Top -->
+    <div
+        class="md:hidden fixed top-0 left-0 right-0 bg-white dark:bg-black z-50 px-4 py-3 flex items-center justify-center shadow-md">
+        <img src="/assets/images/logo.png" alt="Logo" class="w-36">
+    </div>
+
+    <!-- Mobile Navigation (Bottom) -->
+    <nav class="md:hidden fixed bottom-0 left-0 right-0 mobile-nav bg-white dark:bg-gray-900 z-50">
+
+        <div class="flex justify-around items-center py-3">
+            <a href="#" class="flex flex-col items-center text-primary">
+                <i class="fas fa-home text-xl"></i>
+                <span class="text-xs mt-1">Home</span>
+            </a>
+            <a href="/about/index.html"
+                class="flex flex-col items-center text-gray-600 dark:text-gray-400 hover:text-primary transition-colors">
+                <i class="fas fa-info-circle text-xl"></i>
+                <span class="text-xs mt-1">About</span>
+            </a>
+            <a href="#"
+                class="flex flex-col items-center text-gray-600 dark:text-gray-400 hover:text-primary transition-colors">
+                <i class="fas fa-cogs text-xl"></i>
+                <span class="text-xs mt-1">Services</span>
+            </a>
+            <a href="#"
+                class="flex flex-col items-center text-gray-600 dark:text-gray-400 hover:text-primary transition-colors">
+                <i class="fas fa-blog text-xl"></i>
+                <span class="text-xs mt-1">Blog</span>
+            </a>
+            <a href="#"
+                class="flex flex-col items-center text-gray-600 dark:text-gray-400 hover:text-primary transition-colors">
+                <i class="fas fa-envelope text-xl"></i>
+                <span class="text-xs mt-1">Contact</span>
+            </a>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="relative overflow-hidden pt-20 md:pt-24 pb-16 md:pb-24 px-6 lg:px-16">
+        <div class="max-w-7xl mx-auto grid md:grid-cols-2 gap-12 items-center">
+            <div class="space-y-6"><br>
+                <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight">
+                    Businesses <span class="text-primary">Grow Faster</span> With our Strategy, Ads & Sales
+                </h1>
+                <p class="text-lg md:text-xl text-gray-600 dark:text-gray-300">
+                    We scale businesses with paid ads, social media, and result driven strategies
+                </p>
+                <div class="flex flex-wrap gap-4">
+                    <button
+                        class="bg-primary hover:bg-opacity-90 text-black px-8 py-3 rounded-full transition-all duration-300 transform hover:scale-105 font-medium">
+                        Explore Services
+                    </button>
+                    <button
+                        class="border-2 border-gray-300 dark:border-gray-700 hover:border-primary text-gray-800 dark:text-gray-200 px-8 py-3 rounded-full transition-all duration-300 font-medium">
+                        Learn More
+                    </button>
+                </div>
+            </div>
+
+            <div class="relative">
+                <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80"
+                    alt="Digital solutions" class="rounded-xl shadow-xl w-full h-auto animation-float">
+                <div
+                    class="absolute -bottom-6 -left-6 w-32 h-32 bg-primary rounded-xl opacity-20 -z-10 animation-float-reverse">
+                </div>
+                <div class="absolute -top-6 -right-6 w-24 h-24 bg-primary rounded-xl opacity-20 -z-10 animation-float">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Services Section -->
+    <section class="py-16 px-6 lg:px-16 bg-black-50 dark:bg-black-900">
+        <div class="max-w-7xl mx-auto">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl md:text-4xl font-bold mb-4">Our <span class="text-primary">Services</span></h2>
+                <p class="max-w-2xl mx-auto text-gray-600 dark:text-gray-300">
+                    Comprehensive digital solutions tailored to your business needs
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Service 1 -->
+                <div
+                    class="bg-white dark:bg-gray-900 p-8 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-2 border border-gray-100 dark:border-gray-800 animate-slide-up">
+                    <div class="w-14 h-14 bg-primary bg-opacity-10 rounded-lg flex items-center justify-center mb-4">
+                        <i class="fas fa-laptop-code text-2xl text-primary"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2">Website Design & Development</h3>
+                    <p class="text-gray-600 dark:text-gray-300">
+                        We create visually appealing, responsive, and high-performance websites tailored to your brand's
+                        identity and business goals.
+                    </p>
+                </div>
+
+                <!-- Service 2 -->
+                <div
+                    class="bg-white dark:bg-gray-900 p-8 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-2 border border-gray-100 dark:border-gray-800 animate-slide-up">
+                    <div class="w-14 h-14 bg-primary bg-opacity-10 rounded-lg flex items-center justify-center mb-4">
+                        <i class="fas fa-chart-line text-2xl text-primary"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2">Growth Marketing & Digital Strategy</h3>
+                    <p class="text-gray-600 dark:text-gray-300">
+                        We develop data-driven marketing strategies to drive customer engagement, increase conversions,
+                        and scale your business effectively.
+                    </p>
+                </div>
+
+                <!-- Service 3 -->
+                <div
+                    class="bg-white dark:bg-gray-900 p-8 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-2 border border-gray-100 dark:border-gray-800 animate-slide-up">
+                    <div class="w-14 h-14 bg-primary bg-opacity-10 rounded-lg flex items-center justify-center mb-4">
+                        <i class="fas fa-robot text-2xl text-primary"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2">Digital Solutions & Automation</h3>
+                    <p class="text-gray-600 dark:text-gray-300">
+                        Optimize your operations with cutting-edge digital tools, automation systems, and AI-driven
+                        solutions for efficiency and productivity.
+                    </p>
+                </div>
+
+                <!-- Service 4 -->
+                <div
+                    class="bg-white dark:bg-gray-900 p-8 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-2 border border-gray-100 dark:border-gray-800 animate-slide-up">
+                    <div class="w-14 h-14 bg-primary bg-opacity-10 rounded-lg flex items-center justify-center mb-4">
+                        <i class="fas fa-database text-2xl text-primary"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2">Data Analysis & Insights</h3>
+                    <p class="text-gray-600 dark:text-gray-300">
+                        Transform raw data into actionable insights with our advanced analytics services, helping you
+                        make informed business decisions.
+                    </p>
+                </div>
+
+                <!-- Service 5 -->
+                <div
+                    class="bg-white dark:bg-gray-900 p-8 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-2 border border-gray-100 dark:border-gray-800 animate-slide-up">
+                    <div class="w-14 h-14 bg-primary bg-opacity-10 rounded-lg flex items-center justify-center mb-4">
+                        <i class="fas fa-headset text-2xl text-primary"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2">Virtual Assistance Services</h3>
+                    <p class="text-gray-600 dark:text-gray-300">
+                        Our skilled virtual assistants provide administrative, technical, and creative support to
+                        streamline your workflow and boost productivity.
+                    </p>
+                </div>
+
+                <!-- Service 6 -->
+                <div
+                    class="bg-white dark:bg-gray-900 p-8 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-2 border border-gray-100 dark:border-gray-800 animate-slide-up">
+                    <div class="w-14 h-14 bg-primary bg-opacity-10 rounded-lg flex items-center justify-center mb-4">
+                        <i class="fas fa-paint-brush text-2xl text-primary"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2">UI/UX Design</h3>
+                    <p class="text-gray-600 dark:text-gray-300">
+                        Our user-centric approach ensures intuitive, seamless, and engaging digital experiences that
+                        enhance usability and customer satisfaction.
+                    </p>
+                </div>
+
+                <!-- Service 7 -->
+                <div
+                    class="bg-white dark:bg-gray-900 p-8 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-2 border border-gray-100 dark:border-gray-800 animate-slide-up">
+                    <div class="w-14 h-14 bg-primary bg-opacity-10 rounded-lg flex items-center justify-center mb-4">
+                        <i class="fas fa-palette text-2xl text-primary"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2">Graphic Design & Branding</h3>
+                    <p class="text-gray-600 dark:text-gray-300">
+                        From logos to marketing materials, we craft compelling visual identities that leave a lasting
+                        impression and strengthen brand recognition.
+                    </p>
+                </div>
+
+                <!-- Service 8 -->
+                <div
+                    class="bg-white dark:bg-gray-900 p-8 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-2 border border-gray-100 dark:border-gray-800 animate-slide-up">
+                    <div class="w-14 h-14 bg-primary bg-opacity-10 rounded-lg flex items-center justify-center mb-4">
+                        <i class="fas fa-brain text-2xl text-primary"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2">AI & Data Science Solutions</h3>
+                    <p class="text-gray-600 dark:text-gray-300">
+                        Leverage artificial intelligence and machine learning to automate processes, analyze complex
+                        data, and drive business innovation.
+                    </p>
+                </div>
+            </div>
+
+            <div class="text-center mt-12">
+                <button
+                    class="border-2 border-primary text-primary hover:bg-primary hover:text-black px-8 py-3 rounded-full transition-all duration-300 font-medium">
+                    View All Services
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Why Choose Us Section -->
+    <section class="py-16 px-6 lg:px-16 bg-gray-50 dark:bg-black-900">
+        <div class="max-w-7xl mx-auto">
+            <div class="grid md:grid-cols-2 gap-12 items-center">
+                <div>
+                    <img src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80"
+                        alt="LevOr Solutions team" class="rounded-xl shadow-xl w-full h-auto">
+                </div>
+
+                <div>
+                    <h2 class="text-3xl md:text-4xl font-bold mb-6">Why Choose <span class="text-primary">LevOr
+                            Solutions</span></h2>
+
+                    <div class="space-y-6">
+                        <div class="flex items-start space-x-4">
+                            <div class="flex-shrink-0 mt-1">
+                                <div
+                                    class="w-10 h-10 bg-primary bg-opacity-10 rounded-lg flex items-center justify-center">
+                                    <i class="fas fa-lightbulb text-primary"></i>
+                                </div>
+                            </div>
+                            <div>
+                                <h3 class="text-xl font-bold mb-2">Transformative Innovation</h3>
+                                <p class="text-gray-600 dark:text-gray-300">
+                                    We specialize in turning ideas into impactful realities with future-proof solutions
+                                    that drive business growth and digital transformation.
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="flex items-start space-x-4">
+                            <div class="flex-shrink-0 mt-1">
+                                <div
+                                    class="w-10 h-10 bg-primary bg-opacity-10 rounded-lg flex items-center justify-center">
+                                    <i class="fas fa-users text-primary"></i>
+                                </div>
+                            </div>
+                            <div>
+                                <h3 class="text-xl font-bold mb-2">Expert Team</h3>
+                                <p class="text-gray-600 dark:text-gray-300">
+                                    Our skilled professionals combine technical expertise with creative problem-solving
+                                    to deliver exceptional results tailored to your needs.
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="flex items-start space-x-4">
+                            <div class="flex-shrink-0 mt-1">
+                                <div
+                                    class="w-10 h-10 bg-primary bg-opacity-10 rounded-lg flex items-center justify-center">
+                                    <i class="fas fa-chart-line text-primary"></i>
+                                </div>
+                            </div>
+                            <div>
+                                <h3 class="text-xl font-bold mb-2">Proven Success</h3>
+                                <p class="text-gray-600 dark:text-gray-300">
+                                    With a track record of enhancing digital experiences and streamlining operations, we
+                                    measure success by the value we bring to clients.
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="flex items-start space-x-4">
+                            <div class="flex-shrink-0 mt-1">
+                                <div
+                                    class="w-10 h-10 bg-primary bg-opacity-10 rounded-lg flex items-center justify-center">
+                                    <i class="fas fa-rocket text-primary"></i>
+                                </div>
+                            </div>
+                            <div>
+                                <h3 class="text-xl font-bold mb-2">Future-Ready Solutions</h3>
+                                <p class="text-gray-600 dark:text-gray-300">
+                                    We combine strategic thinking with cutting-edge technology to create scalable
+                                    solutions that grow with your business.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials Section -->
+    <section class="py-16 px-6 lg:px-16 bg-gray-50 dark:bg-gray-900">
+        <div class="max-w-7xl mx-auto">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl md:text-4xl font-bold mb-4">What Our <span class="text-primary">Clients</span> Say
+                </h2>
+                <p class="max-w-2xl mx-auto text-gray-600 dark:text-gray-300">
+                    Don't just take our word for it - hear from businesses we've helped transform
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Testimonial 1 -->
+                <div
+                    class="testimonial-card bg-white dark:bg-black-800 border border-gray-200 rounded-xl p-6 transition-all duration-300">
+                    <div class="flex items-center mb-4">
+                        <div class="w-12 h-12 rounded-full overflow-hidden mr-4">
+                            <img src="https://randomuser.me/api/portraits/women/43.jpg" alt="Sarah Johnson"
+                                class="w-full h-full object-cover">
+                        </div>
+                        <div>
+                            <h4 class="font-bold">Sarah Johnson</h4>
+                            <p class="text-gray-500 text-sm">CEO, TechNova</p>
+                        </div>
+                    </div>
+                    <p class="text-gray-600 dark:text-gray-300 mb-4">
+                        "LevOr Solutions transformed our online presence completely. Our website traffic increased by
+                        300% within 3 months of working with them."
+                    </p>
+                    <div class="flex text-yellow-400">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                    </div>
+                </div>
+
+                <!-- Testimonial 2 -->
+                <div
+                    class="testimonial-card bg-white dark:bg-black-800 border border-gray-200 rounded-xl p-6 transition-all duration-300">
+                    <div class="flex items-center mb-4">
+                        <div class="w-12 h-12 rounded-full overflow-hidden mr-4">
+                            <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Michael Chen"
+                                class="w-full h-full object-cover">
+                        </div>
+                        <div>
+                            <h4 class="font-bold">Michael Chen</h4>
+                            <p class="text-gray-500 text-sm">Marketing Director, UrbanStyle</p>
+                        </div>
+                    </div>
+                    <p class="text-gray-600 dark:text-gray-300 mb-4">
+                        "The mobile app they developed for us has been a game-changer. User engagement is through the
+                        roof and customer satisfaction has never been higher."
+                    </p>
+                    <div class="flex text-yellow-400">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                    </div>
+                </div>
+
+                <!-- Testimonial 3 -->
+                <div
+                    class="testimonial-card bg-white dark:bg-black-800 border border-gray-200 rounded-xl p-6 transition-all duration-300">
+                    <div class="flex items-center mb-4">
+                        <div class="w-12 h-12 rounded-full overflow-hidden mr-4">
+                            <img src="https://randomuser.me/api/portraits/women/65.jpg" alt="Emma Rodriguez"
+                                class="w-full h-full object-cover">
+                        </div>
+                        <div>
+                            <h4 class="font-bold">Emma Rodriguez</h4>
+                            <p class="text-gray-500 text-sm">Founder, GreenLife Organics</p>
+                        </div>
+                    </div>
+                    <p class="text-gray-600 dark:text-gray-300 mb-4">
+                        "Their branding expertise helped us establish a strong identity in a crowded market. Sales
+                        increased by 150% in the first quarter after rebranding."
+                    </p>
+                    <div class="flex text-yellow-400">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star-half-alt"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="py-16 px-6 lg:px-16 bg-white text-black">
+        <div class="max-w-4xl mx-auto text-center">
+            <h2 class="text-3xl md:text-4xl font-bold mb-6">Ready to Transform Your Digital Presence?</h2>
+            <p class="text-lg mb-8 opacity-90">
+                Let's discuss how we can help your business grow in the digital space. Get in touch with our team today.
+            </p>
+            <div class="flex flex-wrap justify-center gap-4">
+                <button
+                    class="text-black bg-primary hover:bg-opacity-90 px-8 py-3 rounded-full transition-all duration-300 transform hover:scale-105 font-medium">
+                    Contact Us
+                </button>
+                <button
+                    class="border-2 border-white text-black hover:bg-white hover:bg-opacity-10 px-8 py-3 rounded-full transition-all duration-300 font-medium">
+                    Call Now
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Newsletter Section -->
+    <section class="py-16 px-6 lg:px-16">
+        <div class="max-w-4xl mx-auto bg-gray-100 dark:bg-black-800 rounded-xl p-8 md:p-12">
+            <div class="text-center mb-8">
+                <h2 class="text-2xl md:text-3xl font-bold mb-2">Stay Updated</h2>
+                <p class="text-gray-600 dark:text-gray-300">
+                    Subscribe to our newsletter for the latest digital trends and company updates
+                </p>
+            </div>
+
+            <form class="flex flex-col md:flex-row gap-4">
+                <input type="email" placeholder="Your email address"
+                    class="flex-grow px-6 py-3 rounded-full border border-gray-300 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent dark:bg-gray-900">
+                <button type="submit"
+                    class="bg-primary hover:bg-opacity-90 text-black px-8 py-3 rounded-full transition-all duration-300 font-medium">
+                    Subscribe
+                </button>
+            </form>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-black-900 text-black-300 py-12 px-6 lg:px-16">
+        <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
+            <div>
+                <h3 class="text-2xl font-bold text-black mb-4">LevOr <span class="text-primary">Solutions</span></h3>
+                <p class="mb-4">
+                    Transforming businesses through innovative digital solutions since 2015.
+                </p>
+                <div class="flex space-x-4">
+                    <a href="#"
+                        class="w-10 h-10 rounded-full bg-white-800 hover:bg-primary flex items-center justify-center transition-colors">
+                        <i class="fab fa-facebook-f"></i>
+                    </a>
+                    <a href="#"
+                        class="w-10 h-10 rounded-full bg-black-800 hover:bg-primary flex items-center justify-center transition-colors">
+                        <i class="fab fa-twitter"></i>
+                    </a>
+                    <a href="#"
+                        class="w-10 h-10 rounded-full bg-black-800 hover:bg-primary flex items-center justify-center transition-colors">
+                        <i class="fab fa-linkedin-in"></i>
+                    </a>
+                    <a href="#"
+                        class="w-10 h-10 rounded-full bg-black-800 hover:bg-primary flex items-center justify-center transition-colors">
+                        <i class="fab fa-instagram"></i>
+                    </a>
+                </div>
+            </div>
+
+            <div>
+                <h4 class="text-lg font-bold text-black mb-4">Quick Links</h4>
+                <ul class="space-y-2">
+                    <li><a href="#" class="hover:text-primary transition-colors">Home</a></li>
+                    <li><a href="#" class="hover:text-primary transition-colors">About Us</a></li>
+                    <li><a href="#" class="hover:text-primary transition-colors">Services</a></li>
+                    
+                    <li><a href="#" class="hover:text-primary transition-colors">Blog</a></li>
+                </ul>
+            </div>
+
+            <div>
+                <h4 class="text-lg font-bold text-black mb-4">Services</h4>
+                <ul class="space-y-2">
+                    <li><a href="#" class="hover:text-primary transition-colors">Web Development</a></li>
+                    <li><a href="#" class="hover:text-primary transition-colors">Mobile App Development</a></li>
+                    <li><a href="#" class="hover:text-primary transition-colors">Digital Marketing</a></li>
+                    <li><a href="#" class="hover:text-primary transition-colors">UI/UX Design</a></li>
+                    <li><a href="#" class="hover:text-primary transition-colors">Branding</a></li>
+                </ul>
+            </div>
+
+            <div>
+                <h4 class="text-lg font-bold text-black mb-4">Contact Us</h4>
+                <address class="not-italic space-y-2">
+                    <p><i class="fas fa-map-marker-alt mr-2 text-primary"></i> 43, Gbagada Phase 2, Lagos ,
+Nigeria
+</p>
+                    <p><i class="fas fa-phone-alt mr-2 text-primary"></i> +234 811 036 4590</p>
+                    <p><i class="fas fa-envelope mr-2 text-primary"></i> info@levor.solutions</p>
+                </address>
+            </div>
+        </div>
+
+        <div class="border-t border-gray-800 mt-12 pt-8 text-center">
+            <p>&copy; 2025 LevOr Solutions. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="script.js">
+        
+    </script>
+</body>
+
+</html>

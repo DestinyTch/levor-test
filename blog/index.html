@@ -1,0 +1,689 @@
+<!DOCTYPE html>
+<html lang="en" class="light">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LevOr Solutions - Blog</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#A87519',
+                    },
+                    animation: {
+                        'float': 'float 6s ease-in-out infinite',
+                        'float-reverse': 'float-reverse 5s ease-in-out infinite',
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-20px)' },
+                        },
+                        'float-reverse': {
+                            '0%, 100%': { transform: 'translateY(-10px)' },
+                            '50%': { transform: 'translateY(10px)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+        body {
+            font-family: 'Inter', sans-serif;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        .nav-item::after {
+            content: '';
+            display: block;
+            width: 0;
+            height: 2px;
+            background: #A87519;
+            transition: width 0.3s;
+        }
+
+        .nav-item:hover::after {
+            width: 100%;
+        }
+
+        .blog-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+
+        .dark .blog-card {
+            background-color: #000000;
+            border-color: #222;
+        }
+
+        .mobile-nav {
+            box-shadow: 0 -2px 10px rgba(255, 255, 255, 0.1);
+        }
+
+        .dark .mobile-nav {
+            box-shadow: 0 -2px 10px rgba(255, 255, 255, 0.05);
+            background-color: #111;
+        }
+
+        .toggle-checkbox:checked {
+            right: 0;
+            border-color: #A87519;
+        }
+
+        .toggle-checkbox:checked+.toggle-label {
+            background-color: #A87519;
+        }
+
+        /* White scrollbar for WebKit browsers */
+        ::-webkit-scrollbar {
+            width: 10px;
+            height: 10px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #1a1a1a00;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background-color: #ffffff;
+            border-radius: 6px;
+            border: 2px solid #1a1a1a00;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background-color: #e0e0e0;
+        }
+
+        /* Loading animation styles */
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgb(255, 255, 255);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 0.5s ease-out;
+        }
+
+        .loading-container {
+            position: relative;
+            width: 150px;
+            height: 150px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .loading-logo {
+            width: 200px;
+            animation: spin 1.5s linear infinite;
+        }
+
+        .loading-ring {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border: 3px solid transparent;
+            border-top-color: #A87519;
+            border-radius: 50%;
+            animation: spin-ring 2s linear infinite;
+        }
+
+        .loading-ring:nth-child(2) {
+            border-top-color: #ffffff;
+            animation-delay: 0.3s;
+        }
+
+        .loading-ring:nth-child(3) {
+            border-top-color: #A87519;
+            animation-delay: 0.6s;
+            width: 130%;
+            height: 130%;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        @keyframes spin-ring {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        .fade-out {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        /* Blog specific styles */
+        .blog-content p {
+            margin-bottom: 1.5rem;
+            line-height: 1.7;
+        }
+
+        .blog-content h2 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin: 2rem 0 1rem;
+            color: #A87519;
+        }
+
+        .blog-content h3 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin: 1.5rem 0 1rem;
+        }
+
+        .blog-content ul,
+        .blog-content ol {
+            margin-bottom: 1.5rem;
+            padding-left: 1.5rem;
+        }
+
+        .blog-content li {
+            margin-bottom: 0.5rem;
+        }
+
+        .blog-content a {
+            color: #A87519;
+            text-decoration: underline;
+        }
+
+        .blog-content a:hover {
+            text-decoration: none;
+        }
+
+        .blog-content blockquote {
+            border-left: 4px solid #A87519;
+            padding-left: 1rem;
+            margin: 1.5rem 0;
+            font-style: italic;
+            color: #666;
+        }
+
+        .dark .blog-content blockquote {
+            color: #aaa;
+        }
+    </style>
+</head>
+
+<body class="bg-white text-gray-800 dark:bg-black dark:text-gray-200">
+    <div id="loading-overlay" class="loading-overlay">
+        <div class="loading-container">
+            <div class="loading-ring"></div>
+            <div class="loading-ring"></div>
+            <div class="loading-ring"></div>
+         <a href="/index.html">   <img src="/assets/images/logo.png" width="200px" alt="Loading" class="loading-logo"></a>
+        </div>
+    </div>
+
+    <!-- Desktop Navigation -->
+    <nav class="hidden md:flex items-center justify-between px-6 py-4 lg:px-16">
+        <div class="flex items-center space-x-2">
+         <a href="/index.html">     <img width="200px" src="/assets/images/logo.png" class="text-2xl font-bold"></a>
+        </div>
+
+        <div class="hidden md:flex space-x-8">
+            <a href="/index.html" class="nav-item font-medium">Home</a>
+            <a href="/about/index.html" class="nav-item font-medium">About</a>
+            <a href="/services/index.html" class="nav-item font-medium">Services</a>
+            <a href="/blog/index.html" class="nav-item font-medium text-primary">Blog</a>
+            <a href="/contact/index.html" class="nav-item font-medium">Contact</a>
+        </div>
+
+        <div class="flex items-center space-x-4">
+            <div class="relative inline-block w-12 mr-2 align-middle select-none">
+                <!--    <input type="checkbox" name="toggle" id="toggle" class="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer"/>
+                <label for="toggle" class="toggle-label block overflow-hidden h-6 rounded-full bg-gray-300 cursor-pointer"></label>
+           -->
+            </div>
+            <button
+                class="bg-primary hover:bg-opacity-90 text-black px-6 py-2 rounded-full transition-all duration-300 transform hover:scale-105">
+                Get Started
+            </button>
+        </div>
+    </nav>
+
+    <!-- Mobile Logo at Top -->
+    <div
+        class="md:hidden fixed top-0 left-0 right-0 bg-white dark:bg-black z-50 px-4 py-3 flex items-center justify-center shadow-md">
+        <img src="/assets/images/logo.png" alt="Logo" class="w-36">
+    </div>
+
+    <!-- Main Content -->
+    <main class="pt-16 pb-32 md:pt-24 px-4 md:px-8 lg:px-16">
+        <!-- Blog Header -->
+        <section class="max-w-7xl mx-auto mb-12 text-center">
+            <h1 class="text-4xl md:text-5xl font-bold mb-4">LevOr Blog</h1>
+            <p class="text-lg md:text-xl text-gray-600 dark:text-gray-400 max-w-3xl mx-auto">
+                Insights, trends, and expert advice on digital transformation, web development, and business growth.
+            </p>
+        </section>
+
+        <!-- Featured Post -->
+        <section class="max-w-7xl mx-auto mb-16">
+            <div class="bg-gradient-to-r from-primary to-yellow-600 rounded-2xl p-1">
+                <div class="bg-white dark:bg-black rounded-xl overflow-hidden">
+                    <div class="md:flex">
+                        <div class="md:w-1/2">
+                            <img src="https://images.unsplash.com/photo-1499951360447-b19be8fe80f5?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80"
+                                alt="Featured Post" class="w-full h-full object-cover">
+                        </div>
+                        <div class="p-8 md:w-1/2">
+                            <div class="flex items-center mb-4">
+                                <span class="bg-primary bg-opacity-20 text-primary text-sm px-3 py-1 rounded-full">Featured</span>
+                                <span class="text-gray-500 dark:text-gray-400 text-sm ml-3">June 15, 2025</span>
+                            </div>
+                            <h2 class="text-2xl md:text-3xl font-bold mb-4">The Future of Web Development in 2025</h2>
+                            <p class="text-gray-600 dark:text-gray-400 mb-6">
+                                Explore the emerging trends and technologies that are shaping the future of web development
+                                and how businesses can leverage them for growth.
+                            </p>
+                            <div class="flex items-center">
+                                <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Author"
+                                    class="w-10 h-10 rounded-full mr-3">
+                                <div>
+                                    <p class="font-medium">Destiny Tch</p>
+                                    <p class="text-sm text-gray-500 dark:text-gray-400">Web Developer</p>
+                                </div>
+                            </div>
+                            <a href="#"
+                                class="mt-6 inline-block bg-primary hover:bg-opacity-90 text-black px-6 py-2 rounded-full transition-all duration-300 transform hover:scale-105">
+                                Read Article
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Blog Posts Grid -->
+        <section class="max-w-7xl mx-auto">
+            <div class="flex justify-between items-center mb-8">
+                <h2 class="text-2xl font-bold">Latest Articles</h2>
+                <div class="relative">
+                    <select
+                        class="appearance-none bg-white dark:bg-black border border-gray-300 dark:border-gray-700 rounded-full pl-4 pr-8 py-2 focus:outline-none focus:ring-2 focus:ring-primary">
+                        <option>All Categories</option>
+                        <option>Web Development</option>
+                        <option>Digital Marketing</option>
+                        <option>UI/UX Design</option>
+                        <option>Business Strategy</option>
+                    </select>
+                    <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Blog Post 1 -->
+                <article class="blog-card bg-white dark:bg-black border border-gray-200 dark:border-gray-800 rounded-xl overflow-hidden transition-all duration-300">
+                    <a href="#">
+                        <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80"
+                            alt="Blog Post 1" class="w-full h-48 object-cover">
+                        <div class="p-6">
+                            <div class="flex items-center mb-3">
+                                <span class="text-primary text-sm font-medium">Web Development</span>
+                                <span class="text-gray-500 dark:text-gray-400 text-sm mx-2">•</span>
+                                <span class="text-gray-500 dark:text-gray-400 text-sm">May 28, 2025</span>
+                            </div>
+                            <h3 class="text-xl font-bold mb-3">Optimizing Website Performance in 2025</h3>
+                            <p class="text-gray-600 dark:text-gray-400 mb-4">
+                                Learn the latest techniques to improve your website's loading speed and overall performance.
+                            </p>
+                            <div class="flex items-center">
+                                <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="Author"
+                                    class="w-8 h-8 rounded-full mr-2">
+                                <span class="text-sm">Sarah Williams</span>
+                            </div>
+                        </div>
+                    </a>
+                </article>
+
+                <!-- Blog Post 2 -->
+                <article class="blog-card bg-white dark:bg-black border border-gray-200 dark:border-gray-800 rounded-xl overflow-hidden transition-all duration-300">
+                    <a href="#">
+                        <img src="https://images.unsplash.com/photo-1467232004584-a241de8bcf5d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1469&q=80"
+                            alt="Blog Post 2" class="w-full h-48 object-cover">
+                        <div class="p-6">
+                            <div class="flex items-center mb-3">
+                                <span class="text-primary text-sm font-medium">Digital Marketing</span>
+                                <span class="text-gray-500 dark:text-gray-400 text-sm mx-2">•</span>
+                                <span class="text-gray-500 dark:text-gray-400 text-sm">May 20, 2025</span>
+                            </div>
+                            <h3 class="text-xl font-bold mb-3">SEO Strategies That Actually Work in 2025</h3>
+                            <p class="text-gray-600 dark:text-gray-400 mb-4">
+                                Discover the SEO techniques that are delivering real results in the current digital landscape.
+                            </p>
+                            <div class="flex items-center">
+                                <img src="https://randomuser.me/api/portraits/men/75.jpg" alt="Author"
+                                    class="w-8 h-8 rounded-full mr-2">
+                                <span class="text-sm">Michael Brown</span>
+                            </div>
+                        </div>
+                    </a>
+                </article>
+
+                <!-- Blog Post 3 -->
+                <article class="blog-card bg-white dark:bg-black border border-gray-200 dark:border-gray-800 rounded-xl overflow-hidden transition-all duration-300">
+                    <a href="#">
+                        <img src="https://images.unsplash.com/photo-1547658719-da2b51169166?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1528&q=80"
+                            alt="Blog Post 3" class="w-full h-48 object-cover">
+                        <div class="p-6">
+                            <div class="flex items-center mb-3">
+                                <span class="text-primary text-sm font-medium">UI/UX Design</span>
+                                <span class="text-gray-500 dark:text-gray-400 text-sm mx-2">•</span>
+                                <span class="text-gray-500 dark:text-gray-400 text-sm">May 12, 2025</span>
+                            </div>
+                            <h3 class="text-xl font-bold mb-3">Creating Intuitive User Experiences</h3>
+                            <p class="text-gray-600 dark:text-gray-400 mb-4">
+                                Principles and practices for designing interfaces that users love and find easy to navigate.
+                            </p>
+                            <div class="flex items-center">
+                                <img src="https://randomuser.me/api/portraits/women/68.jpg" alt="Author"
+                                    class="w-8 h-8 rounded-full mr-2">
+                                <span class="text-sm">Emily Davis</span>
+                            </div>
+                        </div>
+                    </a>
+                </article>
+
+                <!-- Blog Post 4 -->
+                <article class="blog-card bg-white dark:bg-black border border-gray-200 dark:border-gray-800 rounded-xl overflow-hidden transition-all duration-300">
+                    <a href="#">
+                        <img src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80"
+                            alt="Blog Post 4" class="w-full h-48 object-cover">
+                        <div class="p-6">
+                            <div class="flex items-center mb-3">
+                                <span class="text-primary text-sm font-medium">Business Strategy</span>
+                                <span class="text-gray-500 dark:text-gray-400 text-sm mx-2">•</span>
+                                <span class="text-gray-500 dark:text-gray-400 text-sm">May 5, 2025</span>
+                            </div>
+                            <h3 class="text-xl font-bold mb-3">Digital Transformation for Small Businesses</h3>
+                            <p class="text-gray-600 dark:text-gray-400 mb-4">
+                                How small businesses can leverage digital tools to compete with larger enterprises.
+                            </p>
+                            <div class="flex items-center">
+                                <img src="https://randomuser.me/api/portraits/men/22.jpg" alt="Author"
+                                    class="w-8 h-8 rounded-full mr-2">
+                                <span class="text-sm">Robert Wilson</span>
+                            </div>
+                        </div>
+                    </a>
+                </article>
+
+                <!-- Blog Post 5 -->
+                <article class="blog-card bg-white dark:bg-black border border-gray-200 dark:border-gray-800 rounded-xl overflow-hidden transition-all duration-300">
+                    <a href="#">
+                        <img src="https://images.unsplash.com/photo-1551434678-e076c223a692?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80"
+                            alt="Blog Post 5" class="w-full h-48 object-cover">
+                        <div class="p-6">
+                            <div class="flex items-center mb-3">
+                                <span class="text-primary text-sm font-medium">Web Development</span>
+                                <span class="text-gray-500 dark:text-gray-400 text-sm mx-2">•</span>
+                                <span class="text-gray-500 dark:text-gray-400 text-sm">April 28, 2025</span>
+                            </div>
+                            <h3 class="text-xl font-bold mb-3">The Rise of Jamstack Architecture</h3>
+                            <p class="text-gray-600 dark:text-gray-400 mb-4">
+                                Why more developers are choosing Jamstack for building fast, secure, and scalable websites.
+                            </p>
+                            <div class="flex items-center">
+                                <img src="https://randomuser.me/api/portraits/women/33.jpg" alt="Author"
+                                    class="w-8 h-8 rounded-full mr-2">
+                                <span class="text-sm">Jessica Lee</span>
+                            </div>
+                        </div>
+                    </a>
+                </article>
+
+                <!-- Blog Post 6 -->
+                <article class="blog-card bg-white dark:bg-black border border-gray-200 dark:border-gray-800 rounded-xl overflow-hidden transition-all duration-300">
+                    <a href="#">
+                        <img src="https://images.unsplash.com/photo-1522542550221-31fd19575a2d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80"
+                            alt="Blog Post 6" class="w-full h-48 object-cover">
+                        <div class="p-6">
+                            <div class="flex items-center mb-3">
+                                <span class="text-primary text-sm font-medium">Digital Marketing</span>
+                                <span class="text-gray-500 dark:text-gray-400 text-sm mx-2">•</span>
+                                <span class="text-gray-500 dark:text-gray-400 text-sm">April 20, 2025</span>
+                            </div>
+                            <h3 class="text-xl font-bold mb-3">Content Marketing That Converts</h3>
+                            <p class="text-gray-600 dark:text-gray-400 mb-4">
+                                How to create content that not only attracts visitors but also drives conversions and sales.
+                            </p>
+                            <div class="flex items-center">
+                                <img src="https://randomuser.me/api/portraits/men/45.jpg" alt="Author"
+                                    class="w-8 h-8 rounded-full mr-2">
+                                <span class="text-sm">Daniel Miller</span>
+                            </div>
+                        </div>
+                    </a>
+                </article>
+            </div>
+
+            <!-- Pagination -->
+            <div class="flex justify-center mt-12">
+                <nav class="flex items-center space-x-2">
+                    <a href="#"
+                        class="px-4 py-2 border border-gray-300 dark:border-gray-700 rounded-lg hover:bg-primary hover:border-primary hover:text-black transition-colors">
+                        <i class="fas fa-chevron-left"></i>
+                    </a>
+                    <a href="#"
+                        class="px-4 py-2 border border-primary bg-primary text-black rounded-lg font-medium">1</a>
+                    <a href="#"
+                        class="px-4 py-2 border border-gray-300 dark:border-gray-700 rounded-lg hover:bg-primary hover:border-primary hover:text-black transition-colors">2</a>
+                    <a href="#"
+                        class="px-4 py-2 border border-gray-300 dark:border-gray-700 rounded-lg hover:bg-primary hover:border-primary hover:text-black transition-colors">3</a>
+                    <span class="px-2 py-2">...</span>
+                    <a href="#"
+                        class="px-4 py-2 border border-gray-300 dark:border-gray-700 rounded-lg hover:bg-primary hover:border-primary hover:text-black transition-colors">8</a>
+                    <a href="#"
+                        class="px-4 py-2 border border-gray-300 dark:border-gray-700 rounded-lg hover:bg-primary hover:border-primary hover:text-black transition-colors">
+                        <i class="fas fa-chevron-right"></i>
+                    </a>
+                </nav>
+            </div>
+        </section>
+
+        <!-- Newsletter Subscription -->
+        <section class="max-w-4xl mx-auto mt-20 bg-gradient-to-r from-primary to-yellow-600 rounded-2xl p-1">
+            <div class="bg-white dark:bg-black rounded-xl p-8 md:p-12 text-center">
+                <h2 class="text-2xl md:text-3xl font-bold mb-4">Stay Updated with Our Latest Insights</h2>
+                <p class="text-gray-600 dark:text-gray-400 mb-8 max-w-2xl mx-auto">
+                    Subscribe to our newsletter and get the latest articles, tips, and industry news delivered straight to
+                    your inbox.
+                </p>
+                <form class="max-w-md mx-auto flex flex-col sm:flex-row gap-3">
+                    <input type="email" placeholder="Your email address"
+                        class="flex-grow px-4 py-3 rounded-full border border-gray-300 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-primary bg-white dark:bg-black">
+                    <button type="submit"
+                        class="bg-primary hover:bg-opacity-90 text-black px-6 py-3 rounded-full transition-all duration-300 transform hover:scale-105 whitespace-nowrap">
+                        Subscribe
+                    </button>
+                </form>
+            </div>
+        </section>
+    </main>
+
+    <!-- Mobile Navigation (Bottom) -->
+    <nav class="md:hidden fixed bottom-0 left-0 right-0 mobile-nav bg-white dark:bg-gray-900 z-50">
+        <div class="flex justify-around items-center py-3">
+            <a href="/index.html" class="flex flex-col items-center text-gray-600 dark:text-gray-400 hover:text-primary transition-colors">
+                <i class="fas fa-home text-xl"></i>
+                <span class="text-xs mt-1">Home</span>
+            </a>
+            <a href="/about/index.html" class="flex flex-col items-center text-gray-600 dark:text-gray-400 hover:text-primary transition-colors">
+                <i class="fas fa-info-circle text-xl"></i>
+                <span class="text-xs mt-1">About</span>
+            </a>
+            <a href="/services/index.html" class="flex flex-col items-center text-gray-600 dark:text-gray-400 hover:text-primary transition-colors">
+                <i class="fas fa-cogs text-xl"></i>
+                <span class="text-xs mt-1">Services</span>
+            </a>
+            <a href="/blog/index.html" class="flex flex-col items-center text-primary">
+                <i class="fas fa-blog text-xl"></i>
+                <span class="text-xs mt-1">Blog</span>
+            </a>
+            <a href="/contact/index.html" class="flex flex-col items-center text-gray-600 dark:text-gray-400 hover:text-primary transition-colors">
+                <i class="fas fa-envelope text-xl"></i>
+                <span class="text-xs mt-1">Contact</span>
+            </a>
+        </div>
+    </nav>
+
+    <!-- Footer -->
+    <footer class="bg-black-900 text-black-300 py-12 px-6 lg:px-16">
+        <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
+            <div>
+                <h3 class="text-2xl font-bold text-black mb-4">LevOr <span class="text-primary">Solutions</span></h3>
+                <p class="mb-4">
+                    Transforming businesses through innovative digital solutions since 2015.
+                </p>
+                <div class="flex space-x-4">
+                    <a href="#"
+                        class="w-10 h-10 rounded-full bg-white-800 hover:bg-primary flex items-center justify-center transition-colors">
+                        <i class="fab fa-facebook-f"></i>
+                    </a>
+                    <a href="#"
+                        class="w-10 h-10 rounded-full bg-black-800 hover:bg-primary flex items-center justify-center transition-colors">
+                        <i class="fab fa-twitter"></i>
+                    </a>
+                    <a href="#"
+                        class="w-10 h-10 rounded-full bg-black-800 hover:bg-primary flex items-center justify-center transition-colors">
+                        <i class="fab fa-linkedin-in"></i>
+                    </a>
+                    <a href="#"
+                        class="w-10 h-10 rounded-full bg-black-800 hover:bg-primary flex items-center justify-center transition-colors">
+                        <i class="fab fa-instagram"></i>
+                    </a>
+                </div>
+            </div>
+
+            <div>
+                <h4 class="text-lg font-bold text-black mb-4">Quick Links</h4>
+                <ul class="space-y-2">
+                    <li><a href="/index.html" class="hover:text-primary transition-colors">Home</a></li>
+                    <li><a href="/about/index.html" class="hover:text-primary transition-colors">About Us</a></li>
+                    <li><a href="/services/index.html" class="hover:text-primary transition-colors">Services</a></li>
+                    
+                    <li><a href="/blog/index.html" class="hover:text-primary transition-colors">Blog</a></li>
+                </ul>
+            </div>
+
+            <div>
+                <h4 class="text-lg font-bold text-black mb-4">Services</h4>
+                <ul class="space-y-2">
+                    <li><a href="#" class="hover:text-primary transition-colors">Web Development</a></li>
+                    <li><a href="#" class="hover:text-primary transition-colors">Mobile App Development</a></li>
+                    <li><a href="#" class="hover:text-primary transition-colors">Digital Marketing</a></li>
+                    <li><a href="#" class="hover:text-primary transition-colors">UI/UX Design</a></li>
+                    <li><a href="#" class="hover:text-primary transition-colors">Branding</a></li>
+                </ul>
+            </div>
+
+            <div>
+                <h4 class="text-lg font-bold text-black mb-4">Contact Us</h4>
+                <address class="not-italic space-y-2">
+                    <p><i class="fas fa-map-marker-alt mr-2 text-primary"></i> 43, Gbagada Phase 2, Lagos, Nigeria</p>
+                    <p><i class="fas fa-phone-alt mr-2 text-primary"></i> +234 811 036 4590</p>
+                    <p><i class="fas fa-envelope mr-2 text-primary"></i> info@levor.solutions</p>
+                </address>
+            </div>
+        </div>
+
+        <div class="border-t border-gray-800 mt-12 pt-8 text-center">
+            <p>&copy; 2025 LevOr Solutions. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Loading animation control
+        document.addEventListener('DOMContentLoaded', function () {
+            const loadingOverlay = document.getElementById('loading-overlay');
+
+            setTimeout(() => {
+                loadingOverlay.classList.add('fade-out');
+
+                // Remove element from DOM after transition ends
+                setTimeout(() => {
+                    loadingOverlay.remove();
+                }, 600); // match the transition duration in CSS
+            }, 600);
+        });
+
+        // Dark mode toggle functionality
+        const toggle = document.getElementById('toggle');
+        const html = document.documentElement;
+
+        // Check for saved user preference, if any
+        if (localStorage.getItem('darkMode') === 'true') {
+            html.classList.add('dark');
+            toggle.checked = true;
+        }
+
+        // Toggle dark mode
+        toggle.addEventListener('change', function () {
+            if (this.checked) {
+                html.classList.add('dark');
+                localStorage.setItem('darkMode', 'true');
+            } else {
+                html.classList.remove('dark');
+                localStorage.setItem('darkMode', 'false');
+            }
+        });
+
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+
+        // Animation on scroll
+        const observerOptions = {
+            threshold: 0.1
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('animate-fadeIn');
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.blog-card').forEach(card => {
+            observer.observe(card);
+        });
+    </script>
+</body>
+
+</html>
